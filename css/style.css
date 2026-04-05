@@ -98,6 +98,180 @@ nav a:hover {
     line-height: 1.8;
 }
 
+/* ==========================================================
+   AUTHENTICATION CARD (LOGIN / SIGN UP)
+   ========================================================== */
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.auth-box h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.auth-box p {
+    color: #888;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.85rem;
+}
+
+.input-group input {
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #eee;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    outline: none;
+    background: #fcfcfc;
+}
+
+.input-group input:focus {
+    border-color: #667eea;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.auth-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 0.9rem !important;
+}
+/* ========================================================== */
+
+/* ==========================================================
+   FEATURES PAGE & CATEGORIES
+   ========================================================== */
+.features-page {
+    background: white;
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.features-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.features-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.features-header p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+.category-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+}
+
+.category-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.category-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-image img {
+    transform: scale(1.1);
+}
+
+.category-info {
+    padding: 2rem;
+}
+
+.category-tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.category-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.category-info p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.cta-section {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid #eee;
+}
+/* ========================================================== */
+
 .cta-buttons {
     display: flex;
     gap: 1.5rem;

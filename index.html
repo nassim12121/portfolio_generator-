@@ -13,7 +13,7 @@
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="create.html">Create</a></li>
-                <li><a href="#features">Features</a></li>
+                <li><a href="features.html">Features</a></li>
             </ul>
         </nav>
     </header>
@@ -29,12 +29,38 @@
                 </p>
                 <div class="cta-buttons">
                     <a href="create.html" class="btn btn-primary">🚀 Get Started</a>
-                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                    <a href="features.html" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
             <div class="hero-image">
-                <div class="hero-image-box">
-                    🎨
+                <!-- Authentication Card (Login / Sign Up) -->
+                <div class="auth-card">
+                    <div class="auth-box">
+                        <h2>Welcome Back 👋</h2>
+                        <p>Sign in to start building</p>
+                        
+                        <form action="login.php" method="POST" class="auth-form">
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" id="first_name" name="first_name" placeholder="John" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" id="last_name" name="last_name" placeholder="Doe" required>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="email">Email address</label>
+                                <input type="email" id="email" name="email" placeholder="john.doe@gmail.com" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary auth-btn">Login / Sign Up</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
