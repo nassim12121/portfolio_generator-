@@ -4,300 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Portfolio – PortfolioGen</title>
-  <link rel="stylesheet" href="style-3.css" />
-  <style>
-    /* ── Page layout override for form page ── */
-    body {
-      align-items: flex-start;
-      padding-bottom: 4rem;
-    }
-
-    /* ── Step progress bar ── */
-    .steps-bar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0;
-      margin-bottom: 2.5rem;
-    }
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      position: relative;
-      z-index: 1;
-    }
-    .step-circle {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: #e0e0e0;
-      color: #999;
-      font-weight: 700;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s, color 0.3s;
-    }
-    .step.active   .step-circle { background: linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
-    .step.done     .step-circle { background: #4caf50; color:#fff; }
-    .step-label {
-      font-size: 0.72rem;
-      color: #999;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-    .step.active .step-label { color: #667eea; font-weight: 700; }
-    .step.done   .step-label { color: #4caf50; }
-    .step-line {
-      flex: 1;
-      height: 3px;
-      background: #e0e0e0;
-      min-width: 40px;
-      max-width: 80px;
-      margin-bottom: 1.3rem;
-      transition: background 0.3s;
-    }
-    .step-line.done { background: #4caf50; }
-
-    /* ── Form card ── */
-    .form-card {
-      background: white;
-      border-radius: 15px;
-      padding: 2.5rem 3rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    }
-    .form-card h2 {
-      font-size: 1.8rem;
-      color: #333;
-      margin-bottom: 0.4rem;
-    }
-    .form-card .step-desc {
-      color: #888;
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-    }
-
-    /* ── Form step panels ── */
-    .form-step { display: none; }
-    .form-step.active { display: block; }
-
-    /* ── Field groups ── */
-    .field-group {
-      margin-bottom: 1.4rem;
-    }
-    .field-group label {
-      display: block;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 0.4rem;
-      font-size: 0.95rem;
-    }
-    .field-group label span.req { color: #e53935; margin-left: 2px; }
-    .field-group input,
-    .field-group textarea,
-    .field-group select {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      color: #333;
-      background: #fafafa;
-      transition: border-color 0.25s, box-shadow 0.25s;
-      outline: none;
-      resize: vertical;
-    }
-    .field-group input:focus,
-    .field-group textarea:focus,
-    .field-group select:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
-      background: #fff;
-    }
-    .field-group input.error,
-    .field-group textarea.error {
-      border-color: #e53935;
-      box-shadow: 0 0 0 3px rgba(229,57,53,0.1);
-    }
-    .field-error {
-      color: #e53935;
-      font-size: 0.82rem;
-      margin-top: 0.3rem;
-      display: none;
-    }
-    .field-error.visible { display: block; }
-    .field-hint {
-      color: #aaa;
-      font-size: 0.8rem;
-      margin-top: 0.25rem;
-    }
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
-    }
-
-    /* ── Skills dynamic list ── */
-    .skills-list { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 1rem; }
-    .skill-row {
-      display: grid;
-      grid-template-columns: 1fr 120px 36px;
-      gap: 0.6rem;
-      align-items: center;
-    }
-    .skill-row input[type="text"] { width: 100%; }
-    .skill-row input[type="number"] {
-      width: 100%;
-      padding: 0.75rem 0.6rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: inherit;
-      color: #333;
-      background: #fafafa;
-      transition: border-color 0.25s;
-      outline: none;
-    }
-    .skill-row input[type="number"]:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.15); }
-    .remove-btn {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: #fde8e8;
-      color: #e53935;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .remove-btn:hover { background: #e53935; color: #fff; }
-    .add-btn {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      padding: 0.55rem 1.2rem;
-      border-radius: 50px;
-      border: 2px dashed #667eea;
-      background: transparent;
-      color: #667eea;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .add-btn:hover { background: #667eea; color: #fff; border-style: solid; }
-
-    /* ── Projects dynamic list ── */
-    .project-card-form {
-      background: #f8f9fa;
-      border-radius: 10px;
-      padding: 1.2rem 1.4rem;
-      margin-bottom: 1rem;
-      border: 1px solid #e8e8e8;
-    }
-    .project-card-form .project-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .project-card-form .project-header span {
-      font-weight: 700;
-      color: #667eea;
-      font-size: 0.9rem;
-    }
-
-    /* ── Navigation buttons ── */
-    .form-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #f0f0f0;
-    }
-    .btn-back {
-      padding: 0.75rem 2rem;
-      border-radius: 50px;
-      border: 2px solid #ccc;
-      background: transparent;
-      color: #666;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.25s;
-    }
-    .btn-back:hover { border-color: #667eea; color: #667eea; }
-    .btn-next {
-      padding: 0.75rem 2.5rem;
-      border-radius: 50px;
-      border: none;
-      background: linear-gradient(135deg,#667eea,#764ba2);
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(102,126,234,0.4);
-      transition: all 0.25s;
-    }
-    .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(102,126,234,0.55); }
-    .btn-submit {
-      padding: 0.85rem 3rem;
-      border-radius: 50px;
-      border: none;
-      background: linear-gradient(135deg,#43e97b,#38f9d7);
-      color: white;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(67,233,123,0.35);
-      transition: all 0.25s;
-    }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(67,233,123,0.5); }
-
-    /* ── Character counter ── */
-    .char-counter {
-      text-align: right;
-      font-size: 0.78rem;
-      color: #bbb;
-      margin-top: 0.2rem;
-    }
-    .char-counter.warn { color: #e53935; }
-
-    /* ── Responsive ── */
-    @media (max-width: 768px) {
-      .form-card { padding: 1.5rem 1.2rem; }
-      .two-col { grid-template-columns: 1fr; }
-      .skill-row { grid-template-columns: 1fr 90px 36px; }
-      .step-line { min-width: 20px; }
-    }
-    @media (max-width: 480px) {
-      .steps-bar { gap: 0; }
-      .step-label { display: none; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body class="page-create">
 
-  <!-- ── Fixed navbar (same as index.html) ── -->
   <header>
     <nav>
       <div class="logo">PortfolioGen</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="create.html" style="color:#667eea;font-weight:700;">Create</a></li>
+        <li><a href="create.html" style="color:#667eea; font-weight:700;">Create</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- ── Main container ── -->
   <div class="container">
 
     <!-- Step progress bar -->
-    <div class="steps-bar" id="stepsBar">
+    <div class="steps-bar">
       <div class="step active" data-step="1">
         <div class="step-circle">1</div>
         <div class="step-label">Personal Info</div>
@@ -324,48 +48,47 @@
       </div>
     </div>
 
-    <!-- Form card -->
     <div class="form-card">
 
-      <!-- ══ STEP 1 – Personal Info ══ -->
+      <!-- STEP 1 — Personal Info -->
       <div class="form-step active" id="step1">
-        <h2>👤 Personal Information</h2>
+        <h2>&#128100; Personal Information</h2>
         <p class="step-desc">Tell us the basics — this appears at the top of your portfolio.</p>
 
         <div class="two-col">
           <div class="field-group">
             <label for="firstName">First Name <span class="req">*</span></label>
-            <input type="text" id="firstName" name="firstName" placeholder="e.g. Ahmed" maxlength="50" />
+            <input type="text" id="firstName" placeholder="e.g. Ahmed" maxlength="50" />
             <div class="field-error" id="err-firstName">Please enter your first name.</div>
           </div>
           <div class="field-group">
             <label for="lastName">Last Name <span class="req">*</span></label>
-            <input type="text" id="lastName" name="lastName" placeholder="e.g. Ben Salah" maxlength="50" />
+            <input type="text" id="lastName" placeholder="e.g. Ben Salah" maxlength="50" />
             <div class="field-error" id="err-lastName">Please enter your last name.</div>
           </div>
         </div>
 
         <div class="field-group">
           <label for="jobTitle">Job Title / Headline <span class="req">*</span></label>
-          <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g. Full-Stack Developer | Computer Science Student" maxlength="100" />
-          <div class="field-error" id="err-jobTitle">Please enter your job title or headline.</div>
+          <input type="text" id="jobTitle" placeholder="e.g. Full-Stack Developer | CS Student" maxlength="100" />
+          <div class="field-error" id="err-jobTitle">Please enter your job title.</div>
         </div>
 
         <div class="field-group">
           <label for="profilePhoto">Profile Photo URL</label>
-          <input type="url" id="profilePhoto" name="profilePhoto" placeholder="https://example.com/your-photo.jpg" />
+          <input type="url" id="profilePhoto" placeholder="https://example.com/photo.jpg" />
           <div class="field-hint">Optional. Leave blank to use a default avatar.</div>
-          <div class="field-error" id="err-profilePhoto">Please enter a valid URL (starting with https://).</div>
+          <div class="field-error" id="err-profilePhoto">Please enter a valid URL (https://).</div>
         </div>
 
         <div class="two-col">
           <div class="field-group">
             <label for="location">Location</label>
-            <input type="text" id="location" name="location" placeholder="e.g. Tunis, Tunisia" maxlength="80" />
+            <input type="text" id="location" placeholder="e.g. Tunis, Tunisia" maxlength="80" />
           </div>
           <div class="field-group">
             <label for="website">Personal Website</label>
-            <input type="url" id="website" name="website" placeholder="https://yourwebsite.com" />
+            <input type="url" id="website" placeholder="https://yourwebsite.com" />
             <div class="field-error" id="err-website">Please enter a valid URL.</div>
           </div>
         </div>
@@ -376,29 +99,28 @@
         </div>
       </div>
 
-      <!-- ══ STEP 2 – Bio ══ -->
+      <!-- STEP 2 — Bio -->
       <div class="form-step" id="step2">
-        <h2>📝 About You</h2>
+        <h2>&#128221; About You</h2>
         <p class="step-desc">Write a short bio that introduces you and your background.</p>
 
         <div class="field-group">
           <label for="bioShort">Short Bio (Hero Tagline) <span class="req">*</span></label>
-          <input type="text" id="bioShort" name="bioShort" placeholder="e.g. Passionate developer building smart solutions." maxlength="120" />
+          <input type="text" id="bioShort" placeholder="e.g. Passionate developer building smart solutions." />
           <div class="char-counter" id="counter-bioShort">0 / 120</div>
-          <div class="field-error" id="err-bioShort">Please enter a short bio (at least 10 characters).</div>
+          <div class="field-error" id="err-bioShort">Must be at least 10 characters.</div>
         </div>
 
         <div class="field-group">
           <label for="bioLong">Full Bio <span class="req">*</span></label>
-          <textarea id="bioLong" name="bioLong" rows="6"
-            placeholder="Write a few sentences about your background, experience, interests, and what makes you unique..."></textarea>
+          <textarea id="bioLong" rows="6" placeholder="Write about your background, experience and interests..."></textarea>
           <div class="char-counter" id="counter-bioLong">0 / 1000</div>
-          <div class="field-error" id="err-bioLong">Please write at least 30 characters for your bio.</div>
+          <div class="field-error" id="err-bioLong">Must be at least 30 characters.</div>
         </div>
 
         <div class="field-group">
           <label for="yearsExp">Years of Experience</label>
-          <select id="yearsExp" name="yearsExp">
+          <select id="yearsExp">
             <option value="">-- Select --</option>
             <option value="student">Student / No experience yet</option>
             <option value="0-1">Less than 1 year</option>
@@ -414,15 +136,13 @@
         </div>
       </div>
 
-      <!-- ══ STEP 3 – Skills ══ -->
+      <!-- STEP 3 — Skills -->
       <div class="form-step" id="step3">
-        <h2>⚡ Skills</h2>
-        <p class="step-desc">Add your technical skills and a proficiency level (0–100%). These will appear as progress bars.</p>
+        <h2>&#9889; Skills</h2>
+        <p class="step-desc">Add your technical skills and proficiency level (0–100%).</p>
 
-        <div class="skills-list" id="skillsList">
-          <!-- Rows injected by JS -->
-        </div>
-        <button class="add-btn" onclick="addSkill()">＋ Add Skill</button>
+        <div class="skills-list" id="skillsList"></div>
+        <button class="add-btn" onclick="addSkill()">&#xFF0B; Add Skill</button>
         <div class="field-error" id="err-skills" style="margin-top:0.8rem;"></div>
 
         <div class="form-nav">
@@ -431,13 +151,13 @@
         </div>
       </div>
 
-      <!-- ══ STEP 4 – Projects ══ -->
+      <!-- STEP 4 — Projects -->
       <div class="form-step" id="step4">
-        <h2>🚀 Projects</h2>
+        <h2>&#128640; Projects</h2>
         <p class="step-desc">Showcase the projects you're proud of. Add at least one.</p>
 
         <div id="projectsList"></div>
-        <button class="add-btn" onclick="addProject()">＋ Add Project</button>
+        <button class="add-btn" onclick="addProject()">&#xFF0B; Add Project</button>
         <div class="field-error" id="err-projects" style="margin-top:0.8rem;"></div>
 
         <div class="form-nav">
@@ -446,32 +166,32 @@
         </div>
       </div>
 
-      <!-- ══ STEP 5 – Contact ══ -->
+      <!-- STEP 5 — Contact -->
       <div class="form-step" id="step5">
-        <h2>📬 Contact Information</h2>
-        <p class="step-desc">How can people reach you? Fill in at least one contact method.</p>
+        <h2>&#128236; Contact Information</h2>
+        <p class="step-desc">How can people reach you?</p>
 
         <div class="two-col">
           <div class="field-group">
             <label for="email">Email Address <span class="req">*</span></label>
-            <input type="email" id="email" name="email" placeholder="you@example.com" />
+            <input type="email" id="email" placeholder="you@example.com" />
             <div class="field-error" id="err-email">Please enter a valid email address.</div>
           </div>
           <div class="field-group">
             <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="+216 XX XXX XXX" maxlength="20" />
+            <input type="tel" id="phone" placeholder="+216 XX XXX XXX" maxlength="20" />
           </div>
         </div>
 
         <div class="two-col">
           <div class="field-group">
             <label for="github">GitHub</label>
-            <input type="url" id="github" name="github" placeholder="https://github.com/username" />
+            <input type="url" id="github" placeholder="https://github.com/username" />
             <div class="field-error" id="err-github">Please enter a valid URL.</div>
           </div>
           <div class="field-group">
             <label for="linkedin">LinkedIn</label>
-            <input type="url" id="linkedin" name="linkedin" placeholder="https://linkedin.com/in/username" />
+            <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" />
             <div class="field-error" id="err-linkedin">Please enter a valid URL.</div>
           </div>
         </div>
@@ -479,328 +199,25 @@
         <div class="two-col">
           <div class="field-group">
             <label for="twitter">Twitter / X</label>
-            <input type="url" id="twitter" name="twitter" placeholder="https://twitter.com/username" />
+            <input type="url" id="twitter" placeholder="https://twitter.com/username" />
             <div class="field-error" id="err-twitter">Please enter a valid URL.</div>
           </div>
           <div class="field-group">
             <label for="instagram">Instagram</label>
-            <input type="url" id="instagram" name="instagram" placeholder="https://instagram.com/username" />
+            <input type="url" id="instagram" placeholder="https://instagram.com/username" />
             <div class="field-error" id="err-instagram">Please enter a valid URL.</div>
           </div>
         </div>
 
         <div class="form-nav">
           <button class="btn-back" onclick="prevStep(5)">&larr; Back</button>
-          <button class="btn-submit" onclick="submitForm()">✅ Generate My Portfolio</button>
+          <button class="btn-submit" onclick="submitForm()">&#9989; Generate My Portfolio</button>
         </div>
       </div>
 
     </div><!-- /form-card -->
   </div><!-- /container -->
 
-  <script>
-    /* ════════════════════════════════════
-       STATE
-    ════════════════════════════════════ */
-    var currentStep = 1;
-    var totalSteps  = 5;
-    var skills   = [];
-    var projects = [];
-
-    /* ════════════════════════════════════
-       STEP NAVIGATION
-    ════════════════════════════════════ */
-    function showStep(n) {
-      document.querySelectorAll('.form-step').forEach(function(el) { el.classList.remove('active'); });
-      document.getElementById('step' + n).classList.add('active');
-
-      document.querySelectorAll('.step').forEach(function(el) {
-        var s = parseInt(el.getAttribute('data-step'));
-        el.classList.remove('active','done');
-        if (s === n)    el.classList.add('active');
-        if (s < n)      el.classList.add('done');
-      });
-
-      for (var i = 1; i <= 4; i++) {
-        var line = document.getElementById('line' + i);
-        if (i < n) line.classList.add('done');
-        else       line.classList.remove('done');
-      }
-      currentStep = n;
-    }
-
-    function nextStep(from) {
-      if (!validateStep(from)) return;
-      if (from < totalSteps) showStep(from + 1);
-    }
-
-    function prevStep(from) {
-      if (from > 1) showStep(from - 1);
-    }
-
-    /* ════════════════════════════════════
-       VALIDATION
-    ════════════════════════════════════ */
-    function showErr(id, msg) {
-      var el = document.getElementById('err-' + id);
-      if (!el) return;
-      el.textContent = msg || el.textContent;
-      el.classList.add('visible');
-      var input = document.getElementById(id);
-      if (input) input.classList.add('error');
-    }
-
-    function clearErr(id) {
-      var el = document.getElementById('err-' + id);
-      if (el) el.classList.remove('visible');
-      var input = document.getElementById(id);
-      if (input) input.classList.remove('error');
-    }
-
-    function validateStep(step) {
-      var valid = true;
-
-      if (step === 1) {
-        ['firstName','lastName','jobTitle'].forEach(function(f) {
-          clearErr(f);
-          var v = document.getElementById(f).value.trim();
-          if (!v) { showErr(f); valid = false; }
-        });
-        // Optional URL fields
-        ['profilePhoto','website'].forEach(function(f) {
-          clearErr(f);
-          var v = document.getElementById(f).value.trim();
-          if (v && !isValidUrl(v)) { showErr(f); valid = false; }
-        });
-      }
-
-      if (step === 2) {
-        clearErr('bioShort'); clearErr('bioLong');
-        var bs = document.getElementById('bioShort').value.trim();
-        var bl = document.getElementById('bioLong').value.trim();
-        if (bs.length < 10) { showErr('bioShort', 'Must be at least 10 characters.'); valid = false; }
-        if (bl.length < 30) { showErr('bioLong', 'Must be at least 30 characters.'); valid = false; }
-      }
-
-      if (step === 3) {
-        var errEl = document.getElementById('err-skills');
-        errEl.classList.remove('visible');
-        if (skills.length === 0) {
-          errEl.textContent = 'Please add at least one skill.';
-          errEl.classList.add('visible');
-          valid = false;
-        } else {
-          var hasEmpty = false;
-          document.querySelectorAll('.skill-name').forEach(function(inp) {
-            if (!inp.value.trim()) hasEmpty = true;
-          });
-          if (hasEmpty) {
-            errEl.textContent = 'Please fill in all skill names.';
-            errEl.classList.add('visible');
-            valid = false;
-          }
-        }
-      }
-
-      if (step === 4) {
-        var errEl2 = document.getElementById('err-projects');
-        errEl2.classList.remove('visible');
-        if (projects.length === 0) {
-          errEl2.textContent = 'Please add at least one project.';
-          errEl2.classList.add('visible');
-          valid = false;
-        } else {
-          var hasEmptyProj = false;
-          document.querySelectorAll('.proj-title').forEach(function(inp) {
-            if (!inp.value.trim()) hasEmptyProj = true;
-          });
-          if (hasEmptyProj) {
-            errEl2.textContent = 'Please fill in all project titles.';
-            errEl2.classList.add('visible');
-            valid = false;
-          }
-        }
-      }
-
-      if (step === 5) {
-        clearErr('email');
-        var em = document.getElementById('email').value.trim();
-        if (!em || !isValidEmail(em)) { showErr('email', 'Please enter a valid email address.'); valid = false; }
-        ['github','linkedin','twitter','instagram'].forEach(function(f) {
-          clearErr(f);
-          var v = document.getElementById(f).value.trim();
-          if (v && !isValidUrl(v)) { showErr(f, 'Please enter a valid URL.'); valid = false; }
-        });
-      }
-
-      return valid;
-    }
-
-    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-    function isValidUrl(v) {
-      try { var u = new URL(v); return u.protocol === 'http:' || u.protocol === 'https:'; }
-      catch(e) { return false; }
-    }
-
-    /* Clear error on input */
-    document.querySelectorAll('input, textarea').forEach(function(el) {
-      el.addEventListener('input', function() {
-        if (el.id) clearErr(el.id);
-      });
-    });
-
-    /* ════════════════════════════════════
-       CHARACTER COUNTERS
-    ════════════════════════════════════ */
-    function setupCounter(id, max) {
-      var inp = document.getElementById(id);
-      var ctr = document.getElementById('counter-' + id);
-      inp.setAttribute('maxlength', max);
-      inp.addEventListener('input', function() {
-        var len = inp.value.length;
-        ctr.textContent = len + ' / ' + max;
-        ctr.classList.toggle('warn', len > max * 0.9);
-      });
-    }
-    setupCounter('bioShort', 120);
-    setupCounter('bioLong', 1000);
-
-    /* ════════════════════════════════════
-       SKILLS
-    ════════════════════════════════════ */
-    var skillCount = 0;
-
-    function addSkill(name, level) {
-      skillCount++;
-      var id = 'skill-' + skillCount;
-      skills.push(id);
-      var list = document.getElementById('skillsList');
-      var row = document.createElement('div');
-      row.className = 'skill-row';
-      row.id = id;
-      row.innerHTML =
-        '<input type="text" class="skill-name" placeholder="e.g. Python, React, MySQL…" value="' + (name || '') + '" />' +
-        '<input type="number" min="0" max="100" placeholder="%" value="' + (level !== undefined ? level : 80) + '" />' +
-        '<button class="remove-btn" onclick="removeSkill(\'' + id + '\')" title="Remove">✕</button>';
-      list.appendChild(row);
-    }
-
-    function removeSkill(id) {
-      var el = document.getElementById(id);
-      if (el) el.remove();
-      skills = skills.filter(function(s) { return s !== id; });
-    }
-
-    // Default 3 skills
-    addSkill('HTML / CSS', 85);
-    addSkill('JavaScript', 75);
-    addSkill('PHP', 60);
-
-    /* ════════════════════════════════════
-       PROJECTS
-    ════════════════════════════════════ */
-    var projectCount = 0;
-
-    function addProject() {
-      projectCount++;
-      var id = 'project-' + projectCount;
-      projects.push(id);
-      var list = document.getElementById('projectsList');
-      var card = document.createElement('div');
-      card.className = 'project-card-form';
-      card.id = id;
-      card.innerHTML =
-        '<div class="project-header">' +
-          '<span>Project #' + projectCount + '</span>' +
-          '<button class="remove-btn" onclick="removeProject(\'' + id + '\')" title="Remove project">✕</button>' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label>Project Title <span class="req">*</span></label>' +
-          '<input type="text" class="proj-title" placeholder="e.g. Portfolio Generator Web App" maxlength="100" />' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label>Description</label>' +
-          '<textarea class="proj-desc" rows="3" placeholder="Briefly describe what this project does and what technologies you used…"></textarea>' +
-        '</div>' +
-        '<div class="two-col">' +
-          '<div class="field-group">' +
-            '<label>Live Demo URL</label>' +
-            '<input type="url" class="proj-demo" placeholder="https://…" />' +
-          '</div>' +
-          '<div class="field-group">' +
-            '<label>GitHub / Source URL</label>' +
-            '<input type="url" class="proj-repo" placeholder="https://github.com/…" />' +
-          '</div>' +
-        '</div>' +
-        '<div class="field-group">' +
-          '<label>Tags / Technologies</label>' +
-          '<input type="text" class="proj-tags" placeholder="e.g. HTML, CSS, PHP, MySQL" maxlength="150" />' +
-          '<div class="field-hint">Comma-separated tags that will appear as badges on the project card.</div>' +
-        '</div>';
-      list.appendChild(card);
-    }
-
-    function removeProject(id) {
-      var el = document.getElementById(id);
-      if (el) el.remove();
-      projects = projects.filter(function(p) { return p !== id; });
-    }
-
-    // Default 1 project
-    addProject();
-
-    /* ════════════════════════════════════
-       COLLECT & SUBMIT
-    ════════════════════════════════════ */
-    function collectData() {
-      var skillsData = [];
-      document.querySelectorAll('.skill-row').forEach(function(row) {
-        var name  = row.querySelector('.skill-name').value.trim();
-        var level = parseInt(row.querySelector('input[type=number]').value) || 0;
-        if (name) skillsData.push({ name: name, level: Math.min(100, Math.max(0, level)) });
-      });
-
-      var projectsData = [];
-      document.querySelectorAll('.project-card-form').forEach(function(card) {
-        var title = card.querySelector('.proj-title').value.trim();
-        if (title) projectsData.push({
-          title:       title,
-          description: card.querySelector('.proj-desc').value.trim(),
-          demo:        card.querySelector('.proj-demo').value.trim(),
-          repo:        card.querySelector('.proj-repo').value.trim(),
-          tags:        card.querySelector('.proj-tags').value.trim()
-        });
-      });
-
-      return {
-        firstName:    document.getElementById('firstName').value.trim(),
-        lastName:     document.getElementById('lastName').value.trim(),
-        jobTitle:     document.getElementById('jobTitle').value.trim(),
-        profilePhoto: document.getElementById('profilePhoto').value.trim(),
-        location:     document.getElementById('location').value.trim(),
-        website:      document.getElementById('website').value.trim(),
-        bioShort:     document.getElementById('bioShort').value.trim(),
-        bioLong:      document.getElementById('bioLong').value.trim(),
-        yearsExp:     document.getElementById('yearsExp').value,
-        skills:       skillsData,
-        projects:     projectsData,
-        email:        document.getElementById('email').value.trim(),
-        phone:        document.getElementById('phone').value.trim(),
-        github:       document.getElementById('github').value.trim(),
-        linkedin:     document.getElementById('linkedin').value.trim(),
-        twitter:      document.getElementById('twitter').value.trim(),
-        instagram:    document.getElementById('instagram').value.trim()
-      };
-    }
-
-    function submitForm() {
-      if (!validateStep(5)) return;
-      var data = collectData();
-      console.log('Portfolio data:', data);
-      // TODO: POST to PHP backend → /portfolio
-      alert('✅ Form data collected! Ready to send to PHP backend.\nCheck the browser console for the full data object.');
-    }
-  </script>
-
+  <script src="js/main.js"></script>
 </body>
 </html>
