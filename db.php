@@ -3,14 +3,24 @@ declare(strict_types=1);
 
 function db(): PDO
 {
-    $path = __DIR__ . '/data';
-    if (!is_dir($path)) {
-        mkdir($path, 0777, true);
+    static $pdo = null;
+
+    if ($pdo instanceof PDO) {
+        return $pdo;
     }
 
-    $pdo = new PDO('sqlite:' . $path . '/portfolio.sqlite', null, null, [
+    $dataDir = __DIR__ . DIRECTORY_SEPARATOR . 'data';
+    if (!is_dir($dataDir)) {
+        mkdir($dataDir, 0777, true);
+    }
+
+    $dbFile = $dataDir . DIRECTORY_SEPARATOR . 'portfolio.sqlite';
+    $dsn = 'sqlite:' . $dbFile;
+
+    $pdo = new PDO($dsn, null, null, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
     ]);
 
     $pdo->exec(
