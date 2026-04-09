@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Portfolio – PortfolioGen</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function () {
+      fetch('session-check.php', { credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.loggedIn) {
+            window.location.replace('login.html');
+          }
+        })
+        .catch(function () {
+          window.location.replace('login.html');
+        });
+    })();
+  </script>
 </head>
 <body class="page-create">
 
