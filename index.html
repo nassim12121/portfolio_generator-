@@ -1,29 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PortfolioGen</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Generator - Create Your Professional Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="login.html">Login</a>
-      <a href="signup.html">Sign Up</a>
-      <a href="create.php">Create</a>
-    </nav>
-  </header>
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <nav>
+            <div class="logo">PortfolioGen</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="create.php">Create</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <main class="container">
-    <h1>Portfolio Generator</h1>
-    <p>Simple project to create a portfolio.</p>
-    <div class="buttons">
-      <a class="btn" href="login.html">Login</a>
-      <a class="btn" href="signup.html">Sign Up</a>
-      <a class="btn" href="create.php">Go To Form</a>
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="content-wrapper">
+
+        <!-- HERO SECTION WITH LOGIN FORM -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">✨ The Smart Way to Build Portfolios</div>
+                <h1>Showcase Your <span>Professional Excellence</span> to the World</h1>
+                <p class="hero-subtitle">
+                    Create a stunning, professional portfolio in minutes. No coding required. 
+                    Choose from elegant templates, customize with your story, and make a lasting impression.
+                </p>
+                <div class="cta-buttons">
+                    <a href="create.php" class="btn btn-primary">🚀 Start Free Today</a>
+                    <a href="#how-it-works" class="btn btn-outline">↓ Learn How It Works</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10K+</span>
+                        <span class="stat-label">Portfolios Created</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Free Forever</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15m</span>
+                        <span class="stat-label">Setup Time</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="auth-card">
+                    <div class="auth-box">
+                        <h2>Welcome Back 👋</h2>
+                        <p>Secure PHP authentication connected to MySQL.</p>
+                        <a href="login.html" class="btn btn-primary auth-btn">Login / Sign Up</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE US SECTION -->
+        <section class="features">
+            <div class="section-header">
+                <h2>Why Choose PortfolioGen?</h2>
+                <p>Everything you need to impress potential employers and clients</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Super Fast</h3>
+                    <p>Create your portfolio in just minutes. No technical skills required, just fill in your information.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Multiple Templates</h3>
+                    <p>Choose from professionally designed templates. Each template is mobile-friendly and modern.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Fully Responsive</h3>
+                    <p>Your portfolio looks perfect on all devices - desktop, tablet, and mobile phones.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Live Preview</h3>
+                    <p>See your portfolio in real-time as you build it. Make adjustments instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Easy Download</h3>
+                    <p>Download your complete portfolio as a standalone HTML file ready to host anywhere.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <h3>Completely Free</h3>
+                    <p>No subscriptions, no hidden fees. Create and download unlimited portfolios for free.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS SECTION -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Simple steps to your professional portfolio</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Login/Register</h3>
+                    <p>Create a free account with your email and password</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Fill Your Info</h3>
+                    <p>Add your personal details, skills, and project experiences</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Preview & Edit</h3>
+                    <p>See your portfolio in real-time and make adjustments</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Download & Deploy</h3>
+                    <p>Download your complete portfolio and share it with the world</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL SECTION -->
+        <section class="cta-final">
+            <div class="cta-content">
+                <h2>Ready to Showcase Your Talent?</h2>
+                <p>Join thousands of professionals who have already built their portfolios with PortfolioGen</p>
+                <a href="create.php" class="btn btn-primary btn-large">Start Building Now</a>
+            </div>
+        </section>
+
     </div>
-  </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 PortfolioGen. Build your portfolio, showcase your skills. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
