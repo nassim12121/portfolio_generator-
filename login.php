@@ -4,16 +4,20 @@ declare(strict_types=1);
 session_start();
 require_once __DIR__ . '/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    if (isset($_SESSION['user_id'])) {
-        header('Location: create.php');
-        exit;
-    }
-    header('Location: login.html');
+function go(string $url): void
+{
+    header('Location: ' . $url);
     exit;
 }
 
-$action = (string)($_POST['action'] ?? '');
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    if (isset($_SESSION['user_id'])) {
+        go('create.php');
+    }
+    go('login.html');
+}
+
+$action = $_POST['action'] ?? '';
 $email = trim((string)($_POST['email'] ?? ''));
 $password = (string)($_POST['password'] ?? '');
 
@@ -25,25 +29,21 @@ try {
         $lastName = trim((string)($_POST['last_name'] ?? ''));
 
         if ($firstName === '' || $lastName === '' || $email === '' || $password === '') {
-            header('Location: signup.html?error=missing_fields');
-            exit;
+            go('signup.html?error=missing_fields');
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: signup.html?error=invalid_email');
-            exit;
+            go('signup.html?error=invalid_email');
         }
 
         if (strlen($password) < 8) {
-            header('Location: signup.html?error=password_too_short');
-            exit;
+            go('signup.html?error=password_too_short');
         }
 
-        $checkStmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+        $checkStmt = $pdo->prepare('SELECT id FROM users WHERE email = :email');
         $checkStmt->execute(['email' => $email]);
         if ($checkStmt->fetch()) {
-            header('Location: signup.html?error=email_exists');
-            exit;
+            go('signup.html?error=email_exists');
         }
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -64,47 +64,39 @@ try {
         $_SESSION['user_name'] = $firstName . ' ' . $lastName;
         $_SESSION['user_email'] = $email;
 
-        header('Location: create.php');
-        exit;
+        go('create.php');
     }
 
     if ($action === 'login') {
         if ($email === '' || $password === '') {
-            header('Location: login.html?error=missing_fields');
-            exit;
+            go('login.html?error=missing_fields');
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            header('Location: login.html?error=invalid_email');
-            exit;
+            go('login.html?error=invalid_email');
         }
 
         $userStmt = $pdo->prepare(
-            'SELECT id, first_name, last_name, email, password FROM users WHERE email = :email LIMIT 1'
+            'SELECT id, first_name, last_name, email, password FROM users WHERE email = :email'
         );
         $userStmt->execute(['email' => $email]);
         $user = $userStmt->fetch();
 
         if (!$user || !password_verify($password, (string)$user['password'])) {
-            header('Location: login.html?error=invalid_credentials');
-            exit;
+            go('login.html?error=invalid_credentials');
         }
 
         $_SESSION['user_id'] = (int)$user['id'];
         $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
         $_SESSION['user_email'] = $user['email'];
 
-        header('Location: create.php');
-        exit;
+        go('create.php');
     }
 
-    header('Location: login.html?error=invalid_action');
-    exit;
+    go('login.html?error=invalid_action');
 } catch (Throwable $e) {
     if ($action === 'register') {
-        header('Location: signup.html?error=server_error');
-        exit;
+        go('signup.html?error=server_error');
     }
-    header('Location: login.html?error=server_error');
-    exit;
+    go('login.html?error=server_error');
 }
