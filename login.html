@@ -55,6 +55,17 @@
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
+      var registered = params.get('registered');
+      if (registered === '1') {
+        var successBox = document.getElementById('authAlert');
+        successBox.textContent = 'Account created successfully. You can now log in.';
+        successBox.style.display = 'block';
+        successBox.style.background = '#e8f7eb';
+        successBox.style.borderColor = '#8bcf99';
+        successBox.style.color = '#1f6b2f';
+        return;
+      }
+
       var code = params.get('error');
       if (!code) return;
 
