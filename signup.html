@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | PortfolioGen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+  <main class="auth-shell">
+    <section class="auth-visual">
+      <span class="auth-badge">PortfolioGen</span>
+      <h1>Create your account and start building</h1>
+      <p>Sign up once and manage your portfolio whenever you want.</p>
+      <ul class="auth-list">
+        <li>Simple registration flow</li>
+        <li>Secure password storage</li>
+        <li>Direct access to your creation area</li>
+      </ul>
+    </section>
+
+    <section class="auth-panel">
+      <div class="top-links">
+        <a href="index.html">Home</a>
+        <a href="login.html">Already have an account?</a>
+      </div>
+      <h2 class="auth-title">Sign up</h2>
+      <p class="auth-sub">Create your PortfolioGen account.</p>
+
+      <div id="authAlert" class="auth-alert" style="display:none;"></div>
+
+      <form class="auth-form" action="login.php" method="POST">
+        <input type="hidden" name="action" value="register">
+
+        <div class="input-row">
+          <div class="input-group">
+            <label for="first_name">First name</label>
+            <input id="first_name" type="text" name="first_name" required placeholder="John">
+          </div>
+          <div class="input-group">
+            <label for="last_name">Last name</label>
+            <input id="last_name" type="text" name="last_name" required placeholder="Doe">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" required placeholder="you@example.com">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password (min 8 chars)</label>
+          <input id="password" type="password" name="password" minlength="8" required placeholder="At least 8 characters">
+        </div>
+
+        <button class="auth-submit" type="submit">Create account</button>
+      </form>
+
+      <p class="auth-footer">Already registered? <a href="login.html">Login now</a>.</p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get('error');
+      if (!code) return;
+
+      var map = {
+        missing_fields: 'Please fill in all fields.',
+        invalid_email: 'Please enter a valid email address.',
+        password_too_short: 'Password must have at least 8 characters.',
+        email_exists: 'This email is already used.',
+        invalid_action: 'Invalid request. Please try again.',
+        server_error: 'Unexpected error. Please try again.'
+      };
+
+      var alertBox = document.getElementById('authAlert');
+      alertBox.textContent = map[code] || 'An error occurred.';
+      alertBox.style.display = 'block';
+    })();
+  </script>
+</body>
+</html>

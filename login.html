@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | PortfolioGen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+  <main class="auth-shell">
+    <section class="auth-visual">
+      <span class="auth-badge">PortfolioGen</span>
+      <h1>Welcome back to your portfolio workspace</h1>
+      <p>Sign in to continue editing your profile, projects, and skills in one place.</p>
+      <ul class="auth-list">
+        <li>Quick and simple sign in</li>
+        <li>Account protected with password hash</li>
+        <li>Ready to build your portfolio fast</li>
+      </ul>
+    </section>
+
+    <section class="auth-panel">
+      <div class="top-links">
+        <a href="index.html">Home</a>
+        <a href="signup.html">Create account</a>
+      </div>
+      <h2 class="auth-title">Sign in</h2>
+      <p class="auth-sub">Use your email and password.</p>
+
+      <div id="authAlert" class="auth-alert" style="display:none;"></div>
+
+      <form class="auth-form" action="login.php" method="POST">
+        <input type="hidden" name="action" value="login">
+
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" required placeholder="you@example.com">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" required placeholder="Your password">
+        </div>
+
+        <button class="auth-submit" type="submit">Login</button>
+      </form>
+
+      <p class="auth-footer">No account yet? <a href="signup.html">Sign up here</a>.</p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get('error');
+      if (!code) return;
+
+      var map = {
+        missing_fields: 'Please fill in all fields.',
+        invalid_email: 'Please enter a valid email address.',
+        invalid_credentials: 'Incorrect email or password.',
+        invalid_action: 'Invalid request. Please try again.',
+        server_error: 'Unexpected error. Please try again.'
+      };
+
+      var alertBox = document.getElementById('authAlert');
+      alertBox.textContent = map[code] || 'An error occurred.';
+      alertBox.style.display = 'block';
+    })();
+  </script>
+</body>
+</html>
