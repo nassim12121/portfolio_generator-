@@ -89,104 +89,112 @@ function clearErr(id) {
   if (input) input.classList.remove('error');
 }
 
+function valueOf(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function clearMany(ids) {
+  ids.forEach(clearErr);
+}
+
+function markRequired(fields) {
+  var valid = true;
+  fields.forEach(function (id) {
+    clearErr(id);
+    if (!valueOf(id)) {
+      showErr(id);
+      valid = false;
+    }
+  });
+  return valid;
+}
+
+function validateOptionalUrls(fields) {
+  var valid = true;
+  fields.forEach(function (id) {
+    clearErr(id);
+    var v = valueOf(id);
+    if (v && !isValidUrl(v)) {
+      showErr(id, 'Please enter a valid URL.');
+      valid = false;
+    }
+  });
+  return valid;
+}
+
+function hasEmptyInput(selector) {
+  var empty = false;
+  document.querySelectorAll(selector).forEach(function (inp) {
+    if (!inp.value.trim()) empty = true;
+  });
+  return empty;
+}
+
+function setGroupError(id, msg) {
+  var err = document.getElementById(id);
+  if (!err) return;
+  err.textContent = msg || '';
+  if (msg) err.classList.add('visible');
+  else err.classList.remove('visible');
+}
+
 function validateStep(step) {
   var valid = true;
 
   if (step === 1) {
-    ['firstName', 'lastName', 'jobTitle'].forEach(function (f) {
-      clearErr(f);
-      if (!document.getElementById(f).value.trim()) {
-        showErr(f);
-        valid = false;
-      }
-    });
-
-    ['profilePhoto', 'website'].forEach(function (f) {
-      clearErr(f);
-      var v = document.getElementById(f).value.trim();
-      if (v && !isValidUrl(v)) {
-        showErr(f);
-        valid = false;
-      }
-    });
+    valid = markRequired(['firstName', 'lastName', 'jobTitle']) && valid;
+    valid = validateOptionalUrls(['profilePhoto', 'website']) && valid;
   }
 
   if (step === 2) {
-    clearErr('bioShort');
-    clearErr('bioLong');
+    clearMany(['bioShort', 'bioLong']);
 
-    if (document.getElementById('bioShort').value.trim().length < 10) {
+    if (valueOf('bioShort').length < 10) {
       showErr('bioShort', 'Must be at least 10 characters.');
       valid = false;
     }
 
-    if (document.getElementById('bioLong').value.trim().length < 30) {
+    if (valueOf('bioLong').length < 30) {
       showErr('bioLong', 'Must be at least 30 characters.');
       valid = false;
     }
   }
 
   if (step === 3) {
-    var errSkills = document.getElementById('err-skills');
-    errSkills.classList.remove('visible');
+    setGroupError('err-skills', '');
 
     if (skills.length === 0) {
-      errSkills.textContent = 'Please add at least one skill.';
-      errSkills.classList.add('visible');
+      setGroupError('err-skills', 'Please add at least one skill.');
       valid = false;
-    } else {
-      var hasEmpty = false;
-      document.querySelectorAll('.skill-name').forEach(function (inp) {
-        if (!inp.value.trim()) hasEmpty = true;
-      });
-
-      if (hasEmpty) {
-        errSkills.textContent = 'Please fill in all skill names.';
-        errSkills.classList.add('visible');
-        valid = false;
-      }
+    } else if (hasEmptyInput('.skill-name')) {
+      setGroupError('err-skills', 'Please fill in all skill names.');
+      valid = false;
     }
   }
 
   if (step === 4) {
-    var errProjects = document.getElementById('err-projects');
-    errProjects.classList.remove('visible');
+    setGroupError('err-projects', '');
 
     if (projects.length === 0) {
-      errProjects.textContent = 'Please add at least one project.';
-      errProjects.classList.add('visible');
+      setGroupError('err-projects', 'Please add at least one project.');
       valid = false;
-    } else {
-      var hasEmptyProj = false;
-      document.querySelectorAll('.proj-title').forEach(function (inp) {
-        if (!inp.value.trim()) hasEmptyProj = true;
-      });
-
-      if (hasEmptyProj) {
-        errProjects.textContent = 'Please fill in all project titles.';
-        errProjects.classList.add('visible');
-        valid = false;
-      }
+    } else if (hasEmptyInput('.proj-title')) {
+      setGroupError('err-projects', 'Please fill in all project titles.');
+      valid = false;
     }
   }
 
   if (step === 5) {
     clearErr('email');
-    var em = document.getElementById('email').value.trim();
+    var em = valueOf('email');
 
     if (!em || !isValidEmail(em)) {
       showErr('email', 'Please enter a valid email address.');
       valid = false;
     }
 
-    ['github', 'linkedin', 'twitter', 'instagram'].forEach(function (f) {
-      clearErr(f);
-      var v = document.getElementById(f).value.trim();
-      if (v && !isValidUrl(v)) {
-        showErr(f, 'Please enter a valid URL.');
-        valid = false;
-      }
-    });
+    valid = validateOptionalUrls(['github', 'linkedin', 'twitter', 'instagram']) && valid;
   }
 
   return valid;
