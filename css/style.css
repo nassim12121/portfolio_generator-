@@ -14,6 +14,11 @@ body {
     flex-direction: column;
 }
 
+html,
+body {
+    overflow-x: hidden;
+}
+
 header {
     position: fixed;
     top: 0;
@@ -627,8 +632,17 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+    }
+
     nav ul {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1rem;
         text-align: center;
     }
@@ -642,6 +656,10 @@ footer p {
         grid-template-columns: 1fr;
         padding: 2rem 1rem;
         gap: 2rem;
+    }
+
+    .hero-content {
+        text-align: center;
     }
 
     .hero-content h1 {
@@ -749,7 +767,7 @@ footer p {
 
 @media (max-width: 480px) {
     nav {
-        padding: 1rem;
+        padding: 0.75rem;
     }
 
     .logo {
@@ -758,6 +776,10 @@ footer p {
 
     nav ul {
         gap: 0.5rem;
+    }
+
+    nav a {
+        font-size: 0.92rem;
     }
 
     .hero-content h1 {
@@ -1131,6 +1153,22 @@ body.page-create {
 
 /* -- create.html responsive overrides -- */
 @media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        margin-top: 74px;
+    }
+
+    .steps-bar {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.35rem;
+        gap: 0.3rem;
+    }
+
+    .steps-bar::-webkit-scrollbar {
+        height: 6px;
+    }
+
   .form-card {
     padding: 1.5rem 1.2rem;
   }
@@ -1146,10 +1184,36 @@ body.page-create {
   .step-line {
     min-width: 20px;
   }
+
+    .form-nav {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .btn-back,
+    .btn-next,
+    .btn-submit {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
+    .container {
+        padding: 0.8rem;
+        margin-top: 72px;
+    }
+
   .step-label {
     display: none;
   }
+
+    .project-card-form {
+        padding: 1rem;
+    }
+
+    .project-card-form .project-header {
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 }
