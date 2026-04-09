@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create Portfolio – PortfolioGen</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
   <script>
     (function () {
       fetch('session-check.php', { credentials: 'same-origin' })
@@ -20,217 +20,36 @@
     })();
   </script>
 </head>
-<body class="page-create">
-
+<body>
   <header>
     <nav>
-      <div class="logo">PortfolioGen</div>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="create.html" style="color:#667eea; font-weight:700;">Create</a></li>
-      </ul>
+      <a href="index.html">Home</a>
+      <a href="create.html">Create</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </header>
 
-  <div class="container">
+  <main class="container">
+    <h1>Create Portfolio</h1>
+    <p class="muted">Simple form (demo only).</p>
 
-    <!-- Step progress bar -->
-    <div class="steps-bar">
-      <div class="step active" data-step="1">
-        <div class="step-circle">1</div>
-        <div class="step-label">Personal Info</div>
-      </div>
-      <div class="step-line" id="line1"></div>
-      <div class="step" data-step="2">
-        <div class="step-circle">2</div>
-        <div class="step-label">Bio</div>
-      </div>
-      <div class="step-line" id="line2"></div>
-      <div class="step" data-step="3">
-        <div class="step-circle">3</div>
-        <div class="step-label">Skills</div>
-      </div>
-      <div class="step-line" id="line3"></div>
-      <div class="step" data-step="4">
-        <div class="step-circle">4</div>
-        <div class="step-label">Projects</div>
-      </div>
-      <div class="step-line" id="line4"></div>
-      <div class="step" data-step="5">
-        <div class="step-circle">5</div>
-        <div class="step-label">Contact</div>
-      </div>
-    </div>
+    <label for="firstName">First Name</label>
+    <input id="firstName" type="text">
 
-    <div class="form-card">
+    <label for="lastName">Last Name</label>
+    <input id="lastName" type="text">
 
-      <!-- STEP 1 — Personal Info -->
-      <div class="form-step active" id="step1">
-        <h2>&#128100; Personal Information</h2>
-        <p class="step-desc">Tell us the basics — this appears at the top of your portfolio.</p>
+    <label for="jobTitle">Job Title</label>
+    <input id="jobTitle" type="text">
 
-        <div class="two-col">
-          <div class="field-group">
-            <label for="firstName">First Name <span class="req">*</span></label>
-            <input type="text" id="firstName" placeholder="e.g. Ahmed" maxlength="50" />
-            <div class="field-error" id="err-firstName">Please enter your first name.</div>
-          </div>
-          <div class="field-group">
-            <label for="lastName">Last Name <span class="req">*</span></label>
-            <input type="text" id="lastName" placeholder="e.g. Ben Salah" maxlength="50" />
-            <div class="field-error" id="err-lastName">Please enter your last name.</div>
-          </div>
-        </div>
+    <label for="email">Email</label>
+    <input id="email" type="email">
 
-        <div class="field-group">
-          <label for="jobTitle">Job Title / Headline <span class="req">*</span></label>
-          <input type="text" id="jobTitle" placeholder="e.g. Full-Stack Developer | CS Student" maxlength="100" />
-          <div class="field-error" id="err-jobTitle">Please enter your job title.</div>
-        </div>
+    <label for="bioLong">Bio</label>
+    <textarea id="bioLong" rows="5"></textarea>
 
-        <div class="field-group">
-          <label for="profilePhoto">Profile Photo URL</label>
-          <input type="url" id="profilePhoto" placeholder="https://example.com/photo.jpg" />
-          <div class="field-hint">Optional. Leave blank to use a default avatar.</div>
-          <div class="field-error" id="err-profilePhoto">Please enter a valid URL (https://).</div>
-        </div>
-
-        <div class="two-col">
-          <div class="field-group">
-            <label for="location">Location</label>
-            <input type="text" id="location" placeholder="e.g. Tunis, Tunisia" maxlength="80" />
-          </div>
-          <div class="field-group">
-            <label for="website">Personal Website</label>
-            <input type="url" id="website" placeholder="https://yourwebsite.com" />
-            <div class="field-error" id="err-website">Please enter a valid URL.</div>
-          </div>
-        </div>
-
-        <div class="form-nav">
-          <span></span>
-          <button class="btn-next" onclick="nextStep(1)">Next: Bio &rarr;</button>
-        </div>
-      </div>
-
-      <!-- STEP 2 — Bio -->
-      <div class="form-step" id="step2">
-        <h2>&#128221; About You</h2>
-        <p class="step-desc">Write a short bio that introduces you and your background.</p>
-
-        <div class="field-group">
-          <label for="bioShort">Short Bio (Hero Tagline) <span class="req">*</span></label>
-          <input type="text" id="bioShort" placeholder="e.g. Passionate developer building smart solutions." />
-          <div class="char-counter" id="counter-bioShort">0 / 120</div>
-          <div class="field-error" id="err-bioShort">Must be at least 10 characters.</div>
-        </div>
-
-        <div class="field-group">
-          <label for="bioLong">Full Bio <span class="req">*</span></label>
-          <textarea id="bioLong" rows="6" placeholder="Write about your background, experience and interests..."></textarea>
-          <div class="char-counter" id="counter-bioLong">0 / 1000</div>
-          <div class="field-error" id="err-bioLong">Must be at least 30 characters.</div>
-        </div>
-
-        <div class="field-group">
-          <label for="yearsExp">Years of Experience</label>
-          <select id="yearsExp">
-            <option value="">-- Select --</option>
-            <option value="student">Student / No experience yet</option>
-            <option value="0-1">Less than 1 year</option>
-            <option value="1-3">1 – 3 years</option>
-            <option value="3-5">3 – 5 years</option>
-            <option value="5+">5+ years</option>
-          </select>
-        </div>
-
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(2)">&larr; Back</button>
-          <button class="btn-next" onclick="nextStep(2)">Next: Skills &rarr;</button>
-        </div>
-      </div>
-
-      <!-- STEP 3 — Skills -->
-      <div class="form-step" id="step3">
-        <h2>&#9889; Skills</h2>
-        <p class="step-desc">Add your technical skills and proficiency level (0–100%).</p>
-
-        <div class="skills-list" id="skillsList"></div>
-        <button class="add-btn" onclick="addSkill()">&#xFF0B; Add Skill</button>
-        <div class="field-error" id="err-skills" style="margin-top:0.8rem;"></div>
-
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(3)">&larr; Back</button>
-          <button class="btn-next" onclick="nextStep(3)">Next: Projects &rarr;</button>
-        </div>
-      </div>
-
-      <!-- STEP 4 — Projects -->
-      <div class="form-step" id="step4">
-        <h2>&#128640; Projects</h2>
-        <p class="step-desc">Showcase the projects you're proud of. Add at least one.</p>
-
-        <div id="projectsList"></div>
-        <button class="add-btn" onclick="addProject()">&#xFF0B; Add Project</button>
-        <div class="field-error" id="err-projects" style="margin-top:0.8rem;"></div>
-
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(4)">&larr; Back</button>
-          <button class="btn-next" onclick="nextStep(4)">Next: Contact &rarr;</button>
-        </div>
-      </div>
-
-      <!-- STEP 5 — Contact -->
-      <div class="form-step" id="step5">
-        <h2>&#128236; Contact Information</h2>
-        <p class="step-desc">How can people reach you?</p>
-
-        <div class="two-col">
-          <div class="field-group">
-            <label for="email">Email Address <span class="req">*</span></label>
-            <input type="email" id="email" placeholder="you@example.com" />
-            <div class="field-error" id="err-email">Please enter a valid email address.</div>
-          </div>
-          <div class="field-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="+216 XX XXX XXX" maxlength="20" />
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div class="field-group">
-            <label for="github">GitHub</label>
-            <input type="url" id="github" placeholder="https://github.com/username" />
-            <div class="field-error" id="err-github">Please enter a valid URL.</div>
-          </div>
-          <div class="field-group">
-            <label for="linkedin">LinkedIn</label>
-            <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" />
-            <div class="field-error" id="err-linkedin">Please enter a valid URL.</div>
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div class="field-group">
-            <label for="twitter">Twitter / X</label>
-            <input type="url" id="twitter" placeholder="https://twitter.com/username" />
-            <div class="field-error" id="err-twitter">Please enter a valid URL.</div>
-          </div>
-          <div class="field-group">
-            <label for="instagram">Instagram</label>
-            <input type="url" id="instagram" placeholder="https://instagram.com/username" />
-            <div class="field-error" id="err-instagram">Please enter a valid URL.</div>
-          </div>
-        </div>
-
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(5)">&larr; Back</button>
-          <button class="btn-submit" onclick="submitForm()">&#9989; Generate My Portfolio</button>
-        </div>
-      </div>
-
-    </div><!-- /form-card -->
-  </div><!-- /container -->
+    <button type="button" onclick="submitForm()">Save</button>
+  </main>
 
   <script src="js/main.js"></script>
 </body>
