@@ -91,11 +91,11 @@ $shareUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' :
       <div class="logo">PortfolioGen</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="guest.php">Guest</a></li>
+        <li><a href="guest.php">Find Portfolio</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </nav>
-  </header>
+          <li><a href="guest.php">Find Portfolio</a></li>
 
   <main class="container preview-shell">
     <section class="preview-hero-card">

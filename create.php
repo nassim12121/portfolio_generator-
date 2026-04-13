@@ -25,7 +25,7 @@ $userName = (string)($_SESSION['user_name'] ?? 'User');
       <div class="logo">PortfolioGen</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="guest.php">Guest</a></li>
+        <li><a href="guest.php">Find Portfolio</a></li>
         <li><a href="create.php" style="color:#0f6fc5; font-weight:700;">Create/Edit</a></li>
         <li><a href="preview.php">My Portfolio</a></li>
         <li><a href="manage_portfolios.php">Manage</a></li>

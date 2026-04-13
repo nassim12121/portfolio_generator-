@@ -156,7 +156,7 @@ if ($query !== '') {
       <div class="logo">PortfolioGen</div>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="guest.php" style="color:#0f6fc5;font-weight:700;">Guest</a></li>
+        <li><a href="guest.php" style="color:#0f6fc5;font-weight:700;">Find Portfolio</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </nav>
@@ -165,7 +165,7 @@ if ($query !== '') {
   <main class="container guest-shell">
     <section class="guest-hero">
       <div>
-        <span class="guest-badge">Guest Access</span>
+        <span class="guest-badge">Find Portfolio</span>
         <h1>Open a freelancer portfolio with a public code.</h1>
         <p>For a professional lookup, paste the public code, slug, or portfolio ID. The public code is the recommended option because it is cleaner and safer to share.</p>
         <p class="guest-result-meta"><?php echo $query !== '' ? 'Showing ' . $resultCount . ' result' . ($resultCount === 1 ? '' : 's') . ' for “' . safeText($query) . '”.' : 'Showing the latest public freelancer portfolios.'; ?></p>
