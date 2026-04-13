@@ -137,9 +137,83 @@ $socialMap = [
 try {
     $pdo = db();
 
+    // Ensure core tables exist for fresh or partially migrated databases.
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS portfolios (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            portfolio_title VARCHAR(120) NULL,
+            slug VARCHAR(140) NULL,
+            is_public TINYINT(1) NOT NULL DEFAULT 0,
+            theme_name VARCHAR(30) NOT NULL DEFAULT 'aurora',
+            job_title VARCHAR(100),
+            profile_photo_url TEXT,
+            location VARCHAR(80),
+            website_url TEXT,
+            bio_short VARCHAR(120),
+            bio_long LONGTEXT,
+            years_exp VARCHAR(20),
+            phone VARCHAR(20),
+            email VARCHAR(100),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )"
+    );
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS skills (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            portfolio_id INT NOT NULL,
+            skill_name VARCHAR(50) NOT NULL,
+            proficiency_level INT DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE
+        )"
+    );
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS projects (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            portfolio_id INT NOT NULL,
+            display_order INT NOT NULL DEFAULT 0,
+            project_title VARCHAR(100) NOT NULL,
+            project_description LONGTEXT,
+            project_url TEXT,
+            project_image_url TEXT,
+            repo_url TEXT,
+            tags VARCHAR(200),
+            is_featured TINYINT(1) NOT NULL DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE
+        )"
+    );
+
+    $pdo->exec(
+        "CREATE TABLE IF NOT EXISTS social_links (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            portfolio_id INT NOT NULL,
+            platform_name VARCHAR(30),
+            profile_url TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE
+        )"
+    );
+
     // Backward compatible migration for featured projects.
     try {
         $pdo->exec('ALTER TABLE projects ADD COLUMN is_featured TINYINT(1) NOT NULL DEFAULT 0');
+    } catch (Throwable $ignored) {
+    }
+
+    try {
+        $pdo->exec('ALTER TABLE projects ADD COLUMN repo_url TEXT NULL');
+    } catch (Throwable $ignored) {
+    }
+
+    try {
+        $pdo->exec('ALTER TABLE projects ADD COLUMN tags VARCHAR(200) NULL');
     } catch (Throwable $ignored) {
     }
 
@@ -159,12 +233,22 @@ try {
     }
 
     try {
+        $pdo->exec("ALTER TABLE portfolios ADD COLUMN public_code VARCHAR(20) NULL UNIQUE");
+    } catch (Throwable $ignored) {
+    }
+
+    try {
         $pdo->exec("ALTER TABLE portfolios ADD COLUMN is_public TINYINT(1) NOT NULL DEFAULT 0");
     } catch (Throwable $ignored) {
     }
 
     try {
         $pdo->exec("ALTER TABLE portfolios ADD COLUMN theme_name VARCHAR(30) NOT NULL DEFAULT 'aurora'");
+    } catch (Throwable $ignored) {
+    }
+
+    try {
+        $pdo->exec("ALTER TABLE social_links ADD COLUMN platform_name VARCHAR(30) NULL");
     } catch (Throwable $ignored) {
     }
 
@@ -203,6 +287,16 @@ try {
     ]);
 
     $portfolioId = (int)$pdo->lastInsertId();
+    $publicCode = 'PG-' . str_pad((string)$portfolioId, 6, '0', STR_PAD_LEFT);
+
+    try {
+        $publicCodeStmt = $pdo->prepare('UPDATE portfolios SET public_code = :public_code WHERE id = :id');
+        $publicCodeStmt->execute([
+            'public_code' => $publicCode,
+            'id' => $portfolioId,
+        ]);
+    } catch (Throwable $ignored) {
+    }
 
     $uploadedProfilePath = isset($_FILES['profile_photo']) && is_array($_FILES['profile_photo'])
         ? saveImageUpload($_FILES['profile_photo'], 'profile_' . $userId)
@@ -313,10 +407,11 @@ try {
     }
 
     $pdo->commit();
-    respond(200, ['ok' => true, 'message' => 'Portfolio created', 'slug' => $slug, 'portfolioId' => $portfolioId]);
+    respond(200, ['ok' => true, 'message' => 'Portfolio created', 'slug' => $slug, 'portfolioId' => $portfolioId, 'publicCode' => $publicCode]);
 } catch (Throwable $e) {
     if (isset($pdo) && $pdo instanceof PDO && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
+    error_log('save_portfolio.php error: ' . $e->getMessage());
     respond(500, ['ok' => false, 'message' => 'Server error']);
 }

@@ -4,8 +4,8 @@
   --panel: #ffffff;
   --ink: #222236;
   --muted: #666a85;
-  --accent: #667eea;
-  --accent-2: #764ba2;
+  --accent: #0f6fc5;
+  --accent-2: #00a89d;
   --danger-bg: #fff3f0;
   --danger-border: #ffc1b4;
   --danger-text: #9c2f1c;
@@ -24,8 +24,8 @@ body.auth-body {
   font-family: "Plus Jakarta Sans", "Segoe UI", Tahoma, sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(1000px 500px at 15% -10%, rgba(102, 126, 234, 0.24), transparent 65%),
-    radial-gradient(900px 500px at 110% 0%, rgba(118, 75, 162, 0.22), transparent 62%),
+    radial-gradient(1000px 500px at 15% -10%, rgba(15, 111, 197, 0.24), transparent 65%),
+    radial-gradient(900px 500px at 110% 0%, rgba(0, 168, 157, 0.2), transparent 62%),
     linear-gradient(160deg, var(--bg-1), var(--bg-2));
   display: flex;
   align-items: center;
@@ -48,7 +48,7 @@ body.auth-body {
   position: relative;
   padding: 46px 38px;
   background:
-    linear-gradient(160deg, rgba(102, 126, 234, 0.95), rgba(118, 75, 162, 0.95)),
+    linear-gradient(160deg, rgba(15, 76, 129, 0.96), rgba(0, 168, 157, 0.94)),
     repeating-linear-gradient(
       -45deg,
       rgba(255, 255, 255, 0.08) 0,
@@ -188,18 +188,45 @@ input:focus {
   margin-top: 6px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(125deg, #0f4c81, #00a89d);
   color: #ffffff;
   font: inherit;
   font-weight: 700;
   padding: 12px 18px;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 12px 24px rgba(15, 76, 129, 0.28);
 }
 
 .auth-submit:hover {
   transform: translateY(-2px);
+}
+
+@keyframes authFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-visual,
+.auth-panel {
+  animation: authFadeUp 0.55s ease both;
+}
+
+.auth-panel {
+  animation-delay: 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-visual,
+  .auth-panel {
+    animation: none;
+  }
 }
 
 .auth-footer {

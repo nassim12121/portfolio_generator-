@@ -49,18 +49,19 @@ try {
   <link rel="stylesheet" href="css/style.css?v=<?php echo safeText($cssVersion); ?>" />
   <style>
     .manage-wrap { max-width: 1000px; margin: 110px auto 30px; padding: 0 1rem; }
-    .manage-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 1rem; margin-bottom: 12px; box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+    .manage-card { background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%); border: 1px solid rgba(15,111,197,.16); border-radius: 16px; padding: 1rem; margin-bottom: 12px; box-shadow: 0 14px 30px rgba(15,62,104,.09); animation: cardIn .45s ease both; }
     .manage-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
-    .manage-title-input { width: 100%; padding: .65rem .75rem; border: 1px solid #d1d5db; border-radius: 8px; }
+    .manage-title-input { width: 100%; padding: .65rem .75rem; border: 1px solid #c9daea; border-radius: 10px; }
     .manage-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .manage-btn { border: 0; border-radius: 8px; padding: .55rem .75rem; text-decoration: none; font-weight: 600; color: #fff; cursor: pointer; }
-    .b-preview { background: #3b82f6; }
-    .b-edit { background: #6366f1; }
-    .b-public { background: #0ea5e9; }
-    .b-pdf { background: #16a34a; }
-    .b-rename { background: #8b5cf6; }
+    .b-preview { background: #0f6fc5; }
+    .b-edit { background: #0f4c81; }
+    .b-public { background: #00a89d; }
+    .b-pdf { background: #1f8f4e; }
+    .b-rename { background: #2f6ea3; }
     .b-delete { background: #ef4444; }
     .meta { color: #6b7280; font-size: .9rem; margin-top: .35rem; }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: translateY(0);} }
   </style>
 </head>
 <body class="page-create">
@@ -68,9 +69,11 @@ try {
   <nav>
     <div class="logo">PortfolioGen</div>
     <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="guest.php">Guest</a></li>
       <li><a href="create.php">Create/Edit</a></li>
       <li><a href="preview.php">My Portfolio</a></li>
-      <li><a href="manage_portfolios.php" style="color:#667eea;font-weight:700;">Manage</a></li>
+      <li><a href="manage_portfolios.php" style="color:#0f6fc5;font-weight:700;">Manage</a></li>
       <li><a href="logout.php">Logout</a></li>
     </ul>
   </nav>

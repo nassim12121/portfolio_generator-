@@ -168,6 +168,8 @@ if ($portfolio !== false) {
     <nav>
       <div class="logo">PortfolioGen</div>
       <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="guest.php">Guest</a></li>
         <li><a href="create.php">Create/Edit</a></li>
         <li><a href="preview.php">My Portfolio</a></li>
         <li><a href="manage_portfolios.php">Manage</a></li>

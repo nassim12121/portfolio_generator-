@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS portfolios (
   user_id          INT          NOT NULL,
   portfolio_title  VARCHAR(120),
   slug             VARCHAR(140) NOT NULL UNIQUE,
+  public_code      VARCHAR(20) UNIQUE,
   is_public        TINYINT(1) NOT NULL DEFAULT 0,
   theme_name       VARCHAR(30) NOT NULL DEFAULT 'aurora',
   job_title        VARCHAR(100),
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS skills (
 -- 4. PROJECTS TABLE - Project Showcase
 -- ==========================================================
 -- Stores user projects with descriptions, links and tags
-CREATE TABLE IF NOT EXISTS projects (
+CREATE TABLE projects (
   id                  INT AUTO_INCREMENT PRIMARY KEY,
   portfolio_id        INT NOT NULL,
   display_order       INT NOT NULL DEFAULT 0,
@@ -79,7 +80,6 @@ CREATE TABLE IF NOT EXISTS projects (
   project_image_url   TEXT,
   repo_url            TEXT,                  -- ✅ added: GitHub / source code URL
   tags                VARCHAR(200),          -- ✅ added: comma-separated tech tags
-  is_featured         TINYINT(1) NOT NULL DEFAULT 0,
   created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE
