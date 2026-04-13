@@ -24,8 +24,9 @@ $userName = (string)($_SESSION['user_name'] ?? 'User');
     <nav>
       <div class="logo">PortfolioGen</div>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="create.php" style="color:#667eea; font-weight:700;">Create</a></li>
+        <li><a href="create.php" style="color:#667eea; font-weight:700;">Create/Edit</a></li>
+        <li><a href="preview.php">My Portfolio</a></li>
+        <li><a href="manage_portfolios.php">Manage</a></li>
         <li><a href="logout.php">Logout</a></li>
       </ul>
     </nav>
@@ -84,6 +85,30 @@ $userName = (string)($_SESSION['user_name'] ?? 'User');
         </div>
 
         <div class="field-group">
+          <label for="portfolioTitle">Portfolio Title</label>
+          <input type="text" id="portfolioTitle" placeholder="e.g. Ahmed Ben Salah Portfolio" maxlength="120" />
+          <div class="field-hint">Shown in public share pages and browser title.</div>
+        </div>
+
+        <div class="two-col">
+          <div class="field-group">
+            <label for="portfolioTheme">Theme</label>
+            <select id="portfolioTheme">
+              <option value="aurora">Aurora (Default)</option>
+              <option value="midnight">Midnight</option>
+              <option value="sunset">Sunset</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="isPublic">Visibility</label>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+              <input type="checkbox" id="isPublic" />
+              <span>Make this portfolio public (shareable link)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field-group">
           <label for="jobTitle">Job Title / Headline <span class="req">*</span></label>
           <input type="text" id="jobTitle" placeholder="e.g. Full-Stack Developer | CS Student" maxlength="100" />
           <div class="field-error" id="err-jobTitle">Please enter your job title.</div>
@@ -91,9 +116,8 @@ $userName = (string)($_SESSION['user_name'] ?? 'User');
 
         <div class="field-group">
           <label for="profilePhoto">Profile Photo URL</label>
-          <input type="url" id="profilePhoto" placeholder="https://example.com/photo.jpg" />
-          <div class="field-hint">Optional. Leave blank to use a default avatar.</div>
-          <div class="field-error" id="err-profilePhoto">Please enter a valid URL (https://).</div>
+          <input type="file" id="profilePhoto" accept="image/*" />
+          <div class="field-hint">Optional. Upload a photo (JPG, PNG, WEBP, GIF).</div>
         </div>
 
         <div class="two-col">

@@ -39,6 +39,7 @@ function isValidUrl(v) {
 ---------------------------------------------------------- */
 var currentStep = 1;
 var totalSteps  = 5;
+var existingProfilePhoto = '';
 
 function showStep(n) {
   document.querySelectorAll('.form-step').forEach(function (el) {
@@ -144,7 +145,7 @@ function validateStep(step) {
 
   if (step === 1) {
     valid = markRequired(['firstName', 'lastName', 'jobTitle']) && valid;
-    valid = validateOptionalUrls(['profilePhoto', 'website']) && valid;
+    valid = validateOptionalUrls(['website']) && valid;
   }
 
   if (step === 2) {
@@ -266,6 +267,7 @@ var projectCount = 0;
 var projects = [];
 
 function addProject() {
+  var projectData = arguments.length > 0 ? arguments[0] : null;
   projectCount++;
   var id = 'project-' + projectCount;
   projects.push(id);
@@ -280,7 +282,11 @@ function addProject() {
   card.innerHTML =
     '<div class="project-header">' +
       '<span>Project #' + projectCount + '</span>' +
-      '<button class="remove-btn" onclick="removeProject(\'' + id + '\')" title="Remove">&#x2715;</button>' +
+      '<div style="display:flex;gap:6px;align-items:center;">' +
+        '<button class="remove-btn" type="button" onclick="moveProjectUp(\'' + id + '\')" title="Move up">&#8593;</button>' +
+        '<button class="remove-btn" type="button" onclick="moveProjectDown(\'' + id + '\')" title="Move down">&#8595;</button>' +
+        '<button class="remove-btn" type="button" onclick="removeProject(\'' + id + '\')" title="Remove">&#x2715;</button>' +
+      '</div>' +
     '</div>' +
     '<div class="field-group">' +
       '<label>Project Title <span class="req">*</span></label>' +
@@ -289,6 +295,11 @@ function addProject() {
     '<div class="field-group">' +
       '<label>Description</label>' +
       '<textarea class="proj-desc" rows="3" placeholder="Describe what this project does and the technologies used..."></textarea>' +
+    '</div>' +
+    '<div class="field-group">' +
+      '<label>Project Image</label>' +
+      '<input type="file" class="proj-image" accept="image/*" />' +
+      '<div class="field-hint proj-image-hint"></div>' +
     '</div>' +
     '<div class="two-col">' +
       '<div class="field-group">' +
@@ -304,15 +315,51 @@ function addProject() {
       '<label>Tags / Technologies</label>' +
       '<input type="text" class="proj-tags" placeholder="e.g. HTML, CSS, PHP, MySQL" maxlength="150" />' +
       '<div class="field-hint">Comma-separated tags shown as badges on the project card.</div>' +
+    '</div>' +
+    '<div class="field-group">' +
+      '<label><input type="checkbox" class="proj-featured" /> Mark as featured project</label>' +
     '</div>';
 
   list.appendChild(card);
+
+  if (projectData) {
+    card.querySelector('.proj-title').value = projectData.title || '';
+    card.querySelector('.proj-desc').value = projectData.description || '';
+    card.querySelector('.proj-demo').value = projectData.demo || '';
+    card.querySelector('.proj-repo').value = projectData.repo || '';
+    card.querySelector('.proj-tags').value = projectData.tags || '';
+    card.querySelector('.proj-featured').checked = !!projectData.featured;
+    card.dataset.existingImage = projectData.image || '';
+
+    var hint = card.querySelector('.proj-image-hint');
+    if (hint && projectData.image) {
+      hint.textContent = 'Current image kept unless you upload a new one.';
+    }
+  }
 }
 
 function removeProject(id) {
   var el = document.getElementById(id);
   if (el) el.remove();
   projects = projects.filter(function (p) { return p !== id; });
+}
+
+function moveProjectUp(id) {
+  var el = document.getElementById(id);
+  if (!el || !el.parentElement) return;
+  var prev = el.previousElementSibling;
+  if (prev) {
+    el.parentElement.insertBefore(el, prev);
+  }
+}
+
+function moveProjectDown(id) {
+  var el = document.getElementById(id);
+  if (!el || !el.parentElement) return;
+  var next = el.nextElementSibling;
+  if (next) {
+    el.parentElement.insertBefore(next, el);
+  }
 }
 
 /* ----------------------------------------------------------
@@ -329,7 +376,7 @@ function collectData() {
   });
 
   var projectsData = [];
-  document.querySelectorAll('.project-card-form').forEach(function (card) {
+  document.querySelectorAll('.project-card-form').forEach(function (card, index) {
     var title = card.querySelector('.proj-title').value.trim();
     if (title) {
       projectsData.push({
@@ -337,16 +384,22 @@ function collectData() {
         description: card.querySelector('.proj-desc').value.trim(),
         demo:        card.querySelector('.proj-demo').value.trim(),
         repo:        card.querySelector('.proj-repo').value.trim(),
-        tags:        card.querySelector('.proj-tags').value.trim()
+        tags:        card.querySelector('.proj-tags').value.trim(),
+        image:       card.dataset.existingImage || '',
+        featured:    card.querySelector('.proj-featured').checked,
+        order:       index
       });
     }
   });
 
   return {
+    portfolioTitle: document.getElementById('portfolioTitle').value.trim(),
+    portfolioTheme: document.getElementById('portfolioTheme').value,
+    isPublic:     !!document.getElementById('isPublic').checked,
     firstName:    document.getElementById('firstName').value.trim(),
     lastName:     document.getElementById('lastName').value.trim(),
     jobTitle:     document.getElementById('jobTitle').value.trim(),
-    profilePhoto: document.getElementById('profilePhoto').value.trim(),
+    profilePhoto: existingProfilePhoto,
     location:     document.getElementById('location').value.trim(),
     website:      document.getElementById('website').value.trim(),
     bioShort:     document.getElementById('bioShort').value.trim(),
@@ -365,9 +418,155 @@ function collectData() {
 
 function submitForm() {
   if (!validateStep(5)) return;
+
   var data = collectData();
-  console.log('Portfolio data:', data);
-  alert('Form data collected! Check the browser console for the full data object.');
+  var submitBtn = document.querySelector('.btn-submit');
+  var formData = new FormData();
+  var profileInput = document.getElementById('profilePhoto');
+
+  formData.append('data', JSON.stringify(data));
+
+  if (profileInput && profileInput.files && profileInput.files[0]) {
+    formData.append('profile_photo', profileInput.files[0]);
+  }
+
+  document.querySelectorAll('.project-card-form').forEach(function (card, idx) {
+    var projectInput = card.querySelector('.proj-image');
+    if (projectInput && projectInput.files && projectInput.files[0]) {
+      formData.append('project_images[' + idx + ']', projectInput.files[0]);
+    }
+  });
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+  }
+
+  fetch('save_portfolio.php', {
+    method: 'POST',
+    body: formData
+  })
+    .then(function (res) {
+      return res.json().catch(function () {
+        return { ok: false, message: 'Invalid server response.' };
+      });
+    })
+    .then(function (payload) {
+      if (!payload.ok) {
+        throw new Error(payload.message || 'Failed to save portfolio.');
+      }
+
+      var targetId = payload.portfolioId ? ('&id=' + encodeURIComponent(payload.portfolioId)) : '';
+      window.location.href = 'preview.php?saved=1' + targetId;
+    })
+    .catch(function (err) {
+      alert('Error: ' + err.message);
+    })
+    .finally(function () {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✅ Generate My Portfolio';
+      }
+    });
+}
+
+function setFieldValue(id, value) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.value = value || '';
+  }
+}
+
+function replaceSkills(skillsData) {
+  var list = document.getElementById('skillsList');
+  if (!list) return;
+
+  list.innerHTML = '';
+  skills = [];
+  skillCount = 0;
+
+  if (!Array.isArray(skillsData) || skillsData.length === 0) {
+    addSkill();
+    return;
+  }
+
+  skillsData.forEach(function (item) {
+    addSkill(item.name || '', item.level || 0);
+  });
+}
+
+function replaceProjects(projectsData) {
+  var list = document.getElementById('projectsList');
+  if (!list) return;
+
+  list.innerHTML = '';
+  projects = [];
+  projectCount = 0;
+
+  if (!Array.isArray(projectsData) || projectsData.length === 0) {
+    addProject();
+    return;
+  }
+
+  projectsData.forEach(function (item) {
+    addProject(item);
+  });
+}
+
+function loadExistingPortfolio() {
+  var params = new URLSearchParams(window.location.search || '');
+  var selectedId = params.get('portfolio_id');
+  var endpoint = 'get_portfolio.php';
+  if (selectedId) {
+    endpoint += '?id=' + encodeURIComponent(selectedId);
+  }
+
+  fetch(endpoint, { method: 'GET' })
+    .then(function (res) {
+      return res.json().catch(function () {
+        return { ok: false, message: 'Invalid server response.' };
+      });
+    })
+    .then(function (payload) {
+      if (!payload.ok || !payload.hasPortfolio || !payload.data) {
+        return;
+      }
+
+      var d = payload.data;
+
+      setFieldValue('firstName', d.firstName);
+      setFieldValue('lastName', d.lastName);
+      setFieldValue('portfolioTitle', d.portfolioTitle || '');
+      setFieldValue('portfolioTheme', d.portfolioTheme || 'aurora');
+      var isPublicInput = document.getElementById('isPublic');
+      if (isPublicInput) {
+        isPublicInput.checked = !!d.isPublic;
+      }
+      setFieldValue('jobTitle', d.jobTitle);
+      existingProfilePhoto = d.profilePhoto || '';
+      setFieldValue('location', d.location);
+      setFieldValue('website', d.website);
+      setFieldValue('bioShort', d.bioShort);
+      setFieldValue('bioLong', d.bioLong);
+      setFieldValue('yearsExp', d.yearsExp);
+      setFieldValue('email', d.email);
+      setFieldValue('phone', d.phone);
+      setFieldValue('github', d.github);
+      setFieldValue('linkedin', d.linkedin);
+      setFieldValue('twitter', d.twitter);
+      setFieldValue('instagram', d.instagram);
+
+      replaceSkills(d.skills);
+      replaceProjects(d.projects);
+
+      var profileHint = document.querySelector('#profilePhoto + .field-hint');
+      if (profileHint && existingProfilePhoto) {
+        profileHint.textContent = 'Current photo kept unless you upload a new one.';
+      }
+    })
+    .catch(function () {
+      // Keep page usable even if loading existing data fails.
+    });
 }
 
 /* Run on create.html only */
@@ -379,4 +578,8 @@ if (document.getElementById('skillsList')) {
 
 if (document.getElementById('projectsList')) {
   addProject();
+}
+
+if (document.getElementById('skillsList')) {
+  loadExistingPortfolio();
 }

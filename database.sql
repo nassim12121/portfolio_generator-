@@ -6,11 +6,18 @@
 CREATE DATABASE IF NOT EXISTS portfolio_gen;
 USE portfolio_gen;
 
+-- Clean existing schema (in the correct database)
+DROP TABLE IF EXISTS social_links;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS skills;
+DROP TABLE IF EXISTS portfolios;
+DROP TABLE IF EXISTS users;
+
 -- ==========================================================
 -- 1. USERS TABLE - Authentication & Login
 -- ==========================================================
 -- Stores user credentials and basic account information
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id         INT AUTO_INCREMENT PRIMARY KEY,
   first_name VARCHAR(50)  NOT NULL,
   last_name  VARCHAR(50)  NOT NULL,
@@ -24,9 +31,13 @@ CREATE TABLE users (
 -- 2. PORTFOLIOS TABLE - Portfolio Data
 -- ==========================================================
 -- Stores all portfolio information (personal info, bio, contact)
-CREATE TABLE portfolios (
+CREATE TABLE IF NOT EXISTS portfolios (
   id               INT AUTO_INCREMENT PRIMARY KEY,
   user_id          INT          NOT NULL,
+  portfolio_title  VARCHAR(120),
+  slug             VARCHAR(140) NOT NULL UNIQUE,
+  is_public        TINYINT(1) NOT NULL DEFAULT 0,
+  theme_name       VARCHAR(30) NOT NULL DEFAULT 'aurora',
   job_title        VARCHAR(100),
   profile_photo_url TEXT,
   location         VARCHAR(80),
@@ -45,7 +56,7 @@ CREATE TABLE portfolios (
 -- 3. SKILLS TABLE - Technical Skills & Proficiency
 -- ==========================================================
 -- Stores user skills with proficiency levels (0-100)
-CREATE TABLE skills (
+CREATE TABLE IF NOT EXISTS skills (
   id               INT AUTO_INCREMENT PRIMARY KEY,
   portfolio_id     INT NOT NULL,
   skill_name       VARCHAR(50) NOT NULL,
@@ -58,15 +69,17 @@ CREATE TABLE skills (
 -- 4. PROJECTS TABLE - Project Showcase
 -- ==========================================================
 -- Stores user projects with descriptions, links and tags
-CREATE TABLE projects (
+CREATE TABLE IF NOT EXISTS projects (
   id                  INT AUTO_INCREMENT PRIMARY KEY,
   portfolio_id        INT NOT NULL,
+  display_order       INT NOT NULL DEFAULT 0,
   project_title       VARCHAR(100) NOT NULL,
   project_description LONGTEXT,
   project_url         TEXT,
   project_image_url   TEXT,
   repo_url            TEXT,                  -- ✅ added: GitHub / source code URL
   tags                VARCHAR(200),          -- ✅ added: comma-separated tech tags
+  is_featured         TINYINT(1) NOT NULL DEFAULT 0,
   created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE
@@ -76,7 +89,7 @@ CREATE TABLE projects (
 -- 5. SOCIAL_LINKS TABLE - Social Media & Contact
 -- ==========================================================
 -- Stores social media profiles and contact links
-CREATE TABLE social_links (
+CREATE TABLE IF NOT EXISTS social_links (
   id            INT AUTO_INCREMENT PRIMARY KEY,
   portfolio_id  INT NOT NULL,
   platform_name VARCHAR(30),  -- github, linkedin, twitter, instagram
@@ -88,8 +101,7 @@ CREATE TABLE social_links (
 -- ==========================================================
 -- INDEXES - Performance Optimization
 -- ==========================================================
-CREATE INDEX idx_users_email            ON users(email);
-CREATE INDEX idx_portfolios_user_id     ON portfolios(user_id);
-CREATE INDEX idx_skills_portfolio_id    ON skills(portfolio_id);
-CREATE INDEX idx_projects_portfolio_id  ON projects(portfolio_id);
-CREATE INDEX idx_social_links_portfolio_id ON social_links(portfolio_id);
+-- NOTE:
+-- `users.email` is already indexed by UNIQUE constraint.
+-- Foreign key columns are automatically indexed by InnoDB when needed.
+-- Keeping this section empty avoids duplicate-index errors when re-running this script.
